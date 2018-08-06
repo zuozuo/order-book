@@ -1,0 +1,13 @@
+[Unit]
+Description=Fetch Binance order book
+After=syslog.target network.target redis-server.service
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/root/go/bin/binance
+
+[Install]
+WantedBy=multi-user.target
