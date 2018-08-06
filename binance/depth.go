@@ -79,35 +79,24 @@ func (o *OrderBook) StoreToRedis(otype string, price float64, quantity float64) 
 // Process all incoming bids
 func (o *OrderBook) ProcessBids(bids []binance.Order) {
 	for _, bid := range bids {
-		//o.BidMutex.Lock()
 		if bid.Quantity == 0 {
 			o.DeleteFromRedis("bids", bid.Price)
-			//delete(o.Bids, bid.Price)
 		} else {
 			o.StoreToRedis("bids", bid.Price, bid.Quantity)
-			//o.Bids[bid.Price] = bid.Quantity
 		}
-		//o.BidMutex.Unlock()
 	}
 }
 
 // Process all incoming asks
 func (o *OrderBook) ProcessAsks(asks []binance.Order) {
 	for _, ask := range asks {
-		//o.AskMutex.Lock()
 		if ask.Quantity == 0 {
 			o.DeleteFromRedis("asks", ask.Price)
-			//delete(o.Asks, ask.Price)
 		} else {
 			o.StoreToRedis("asks", ask.Price, ask.Quantity)
-			//o.Asks[ask.Price] = ask.Quantity
 		}
-		//o.AskMutex.Unlock()
 	}
 }
-
-// func (o *OrderBook) storeMessage() {
-// }
 
 // Hands off incoming messages to processing functions
 func (o *OrderBook) Maintainer() {
@@ -144,7 +133,6 @@ func FetchOrderBook(symbol string) {
 
 	// Connect to websocket
 	var wsDialer = &websocket.Dialer{HandshakeTimeout: 30 * time.Second}
-	// spew.Dump(wsDialer)
 	wsConn, _, err := wsDialer.Dial(address, nil)
 	if err != nil {
 		panic(err)
@@ -179,21 +167,16 @@ func FetchOrderBook(symbol string) {
 	// Read & Process Messages from wss stream
 	for {
 		_, message, err := wsConn.ReadMessage()
-		// spew.Dump(message)
 		if err != nil {
 			log.Println("[ERROR] ReadMessage:", err)
 		}
 
 		msg := State{}
-		// fmt.Println(message)
 		err = json.Unmarshal(message, &msg)
 		if err != nil {
 			log.Println("[ERROR] Parsing:", err)
 			continue
 		}
-		fmt.Println(msg.UpdateId)
-		// spew.Dump(msg.UpdateId)
-		fmt.Println("------------------------------------------")
 		ob.Updates <- msg
 	}
 }
