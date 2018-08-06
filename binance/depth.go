@@ -182,6 +182,6 @@ func FetchOrderBook(symbol string) {
 }
 
 func main() {
-	fmt.Println("binance order book")
+	fmt.Println("start fetching binance order book")
 	FetchOrderBook("ethbtc")
 }
