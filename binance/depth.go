@@ -143,7 +143,7 @@ func FetchOrderBook(symbol string) {
 	address := fmt.Sprintf("wss://stream.binance.com:9443/ws/%s@depth", symbol)
 
 	// Connect to websocket
-	var wsDialer = &websocket.Dialer{HandshakeTimeout: 10 * time.Second}
+	var wsDialer = &websocket.Dialer{HandshakeTimeout: 30 * time.Second}
 	// spew.Dump(wsDialer)
 	wsConn, _, err := wsDialer.Dial(address, nil)
 	if err != nil {
@@ -199,5 +199,6 @@ func FetchOrderBook(symbol string) {
 }
 
 func main() {
+	fmt.Println("binance order book")
 	FetchOrderBook("ethbtc")
 }
